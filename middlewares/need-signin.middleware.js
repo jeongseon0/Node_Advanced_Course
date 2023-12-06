@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const security = require('../config/config.js');
-const db = require('../models/index.model.js');
+import { verify } from 'jsonwebtoken';
+import { token_secretKey } from '../config/config.js';
+import db from '../models/index.model.js';
 const { Users } = db;
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   try {
     const { authorization } = req.headers.authorization;
 
@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
       return res.status(400).json({ message: 'Access Token이 없습니다.' });
     }
 
-    const decodedToken = jwt.verify(token, security.token_secretKey);
+    const decodedToken = verify(token, token_secretKey);
     const { userId } = decodedToken;
 
     const user = (await Users.findByPK(userId)).toJSON();

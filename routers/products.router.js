@@ -1,9 +1,9 @@
-const express = require('express');
-const Sequelize = require('sequelize');
-const authMiddleWare = require('../middlewares/need-signin.middleware.js');
-const db = require('../models/index.model.js');
+import { Router } from 'express';
+import { col } from 'sequelize';
+import authMiddleWare from '../middlewares/need-signin.middleware.js';
+import db from '../models/index.model.js';
 
-const productsRouter = express.Router();
+const productsRouter = Router();
 const { Products, Users } = db;
 
 // 상품 작성
@@ -34,8 +34,7 @@ productsRouter.get('', async (req, res) => {
     const { sort } = req.query;
     let upperCaseSort = sort?.toUpperCase();
 
-    if (upperCaseSort !== 'ASC' && upperCaseSort !== 'DESC')
-      upperCaseSort = 'DESC';
+    if (upperCaseSort !== 'ASC' && upperCaseSort !== 'DESC') upperCaseSort = 'DESC';
 
     // id, 상품명, 작성자, 상태, 날짜(내림차순)
     const products = await Product.findAll({
@@ -45,7 +44,7 @@ productsRouter.get('', async (req, res) => {
         'content',
         'userId',
         'status',
-        [Sequelize.col('user.name'), 'userName'],
+        [col('user.name'), 'userName'],
         'createdAt',
         'updatedAt'
       ],
@@ -72,7 +71,7 @@ productsRouter.get('/:productId', async (req, res) => {
         'content',
         'userId',
         'status',
-        [Sequelize.col('user.name'), 'userName'],
+        [col('user.name'), 'userName'],
         'createdAt',
         'updatedAt'
       ],
@@ -158,4 +157,4 @@ productsRouter.delete('/:productId', authMiddleWare, async (req, res) => {
   }
 });
 
-module.exports = productsRouter;
+export default productsRouter;

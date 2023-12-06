@@ -1,7 +1,7 @@
-const express = require('express');
-const authMiddleWare = require('../middlewares/need-signin.middleware.js');
+import { Router } from 'express';
+import authMiddleWare from '../middlewares/need-signin.middleware.js';
 
-const usersRouter = express.Router();
+const usersRouter = Router();
 
 // 내 정보 조회
 usersRouter.get('/me', authMiddleWare, (req, res) => {
@@ -14,4 +14,4 @@ usersRouter.get('/me', authMiddleWare, (req, res) => {
   }
 });
 
-module.exports = usersRouter;
+export default usersRouter;

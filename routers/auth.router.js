@@ -1,10 +1,10 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const db = require('../models/index.model.js');
-const security = require('../config/config.js');
+import { Router } from 'express';
+import { hashSync, compareSync } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import db from '../models/index.model.js';
+import { saltORrounds, token_secretKey, token_expiresIn } from '../config/config.js';
 
-const authRouter = express.Router();
+const authRouter = Router();
 const { Users } = db;
 
 // 회원가입 API
@@ -50,7 +50,7 @@ authRouter.post('/signup', async (req, res) => {
       return res.status(400).json({ message: '이미 가입된 이메일입니다.' });
     }
 
-    const hashedPassword = bcrypt.hashSync(password, security.saltORrounds);
+    const hashedPassword = hashSync(password, saltORrounds);
 
     const newUser = (await Users.create({ email, name, password: hashedPassword })).toJSON();
 
@@ -78,7 +78,7 @@ authRouter.post('/signin', async (req, res) => {
 
     const user = (await Users.findOne({ where: { email } }))?.toJSON();
     const hashedPassword = user?.password ?? '';
-    const passwordsMatched = bcrypt.compareSync(password, hashedPassword);
+    const passwordsMatched = compareSync(password, hashedPassword);
 
     if (!user || !passwordsMatched) {
       return res.status(401).json({
@@ -86,8 +86,8 @@ authRouter.post('/signin', async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId: user.id }, security.token_secretKey, {
-      expiresIn: security.token_expiresIn
+    const token = sign({ userId: user.id }, token_secretKey, {
+      expiresIn: token_expiresIn
     });
 
     return res.status(200).json({ message: '로그인에 성공했습니다.', data: { token } });
@@ -96,4 +96,4 @@ authRouter.post('/signin', async (req, res) => {
   }
 });
 
-module.exports = authRouter;
+export default authRouter;
