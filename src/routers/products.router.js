@@ -5,6 +5,7 @@ import db from '../models/index.model.js';
 
 const productsRouter = Router();
 const { Products, Users } = db;
+//TODO: sequelize로 되어있는 db 모두 prisma로 연결되게 바꾸기
 
 // 상품 작성
 productsRouter.post('', authMiddleWare, async (req, res) => {
