@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import { hashSync, compareSync } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import db from '../models/index.model.js';
-import { saltORrounds, token_secretKey, token_expiresIn } from '../config/config.js';
+import { saltORrounds, token_secretKey, token_expiresIn } from './config/config.js';
 
 const authRouter = Router();
-const { Users } = db;
 
 // 회원가입 API
 authRouter.post('/signup', async (req, res) => {

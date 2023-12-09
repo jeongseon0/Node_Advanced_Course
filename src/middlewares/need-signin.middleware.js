@@ -1,7 +1,7 @@
 import { verify } from 'jsonwebtoken';
 import { token_secretKey } from '../config/config.js';
-import db from '../models/index.model.js';
-const { Users } = db;
+import { prisma } from '../utils/prisma/index.js';
+const { users } = prisma.user;
 
 export default async (req, res, next) => {
   try {
@@ -22,7 +22,7 @@ export default async (req, res, next) => {
     const decodedToken = verify(token, token_secretKey);
     const { userId } = decodedToken;
 
-    const user = (await Users.findByPK(userId)).toJSON();
+    const user = (await users.findByPK(userId)).toJSON();
 
     if (!user) {
       return res.status(400).json({ message: '존재하지 않는 사용자입니다.' });
