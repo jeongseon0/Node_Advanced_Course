@@ -9,19 +9,16 @@ export class ProductsController {
     try {
       const { userId, userName } = res.locals.user;
       const { title, content } = req.body;
-      if (!title) {
-        return res.status(400).json({ message: '제목을 입력해주세요.' });
-      }
-
-      if (!content) {
-        return res.status(400).json({ message: '내용을 입력해주세요.' });
-      }
 
       const createdProduct = await this.productsServide.createProduct(userId, userName, title, content);
 
       return res.status(200).json({ data: createdProduct });
     } catch (error) {
-      next(error);
+      if (error instanceof ErrorHandler) {
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
     }
   };
 
@@ -34,7 +31,11 @@ export class ProductsController {
 
       return res.status(200).json({ data: gotProducts });
     } catch (error) {
-      next(error);
+      if (error instanceof ErrorHandler) {
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
     }
   };
 
@@ -45,13 +46,13 @@ export class ProductsController {
 
       const gotProduct = await this.productsServide.getProductOne(id);
 
-      if (!product) {
-        return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
-      }
-
       return res.status(200).json({ data: gotProduct });
     } catch (error) {
-      next(error);
+      if (error instanceof ErrorHandler) {
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
     }
   };
 
@@ -62,30 +63,15 @@ export class ProductsController {
       const { title, content, status } = req.body;
       const { userId: userId, name: userName } = res.locals.user;
 
-      if (!title && !content && !status) {
-        return res.status(400).json({ message: '수정한 정보가 없습니다.' });
-      }
-
-      if (status !== 'FOR_SALE' || status !== 'SOLD_OUT') {
-        return res.status(400).json({
-          message: '상품의 판매상태가 올바르지 않습니다. (FOR_SALE or SOLD_OUT)'
-        });
-      }
-
       const updatedProduct = await ProductsService.updateProduct(id, title, content, status, userId, userName);
-
-      if (!updatedProduct) {
-        return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
-      }
-
-      // 제대로 기능 수행 못할것같음
-      // if (updatedProduct.userId !== userId) {
-      //   return res.status(403).json({ message: '작성자만 수정할 수 있습니다.' });
-      // }
 
       return res.status(200).json({ data: updatedProduct });
     } catch (error) {
-      next(error);
+      if (error instanceof ErrorHandler) {
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
     }
   };
 
@@ -93,22 +79,17 @@ export class ProductsController {
   deleteProduct = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { userId, userName } = res.locals.user;
+      const { userId } = res.locals.user;
 
-      const deletedProduct = await ProductsService.deleteProduct(id, userId, userName);
-
-      if (!product) {
-        return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
-      }
-
-      // 제대로 기능 수행 못할것같음
-      // if (product.userId !== userId) {
-      //   return res.status(403).json({ message: '작성자만 삭제할 수 있습니다.' });
-      // }
+      const deletedProduct = await ProductsService.deleteProduct(id, userId);
 
       return res.status(200).json({ data: deletedProduct });
     } catch (error) {
-      next(error);
+      if (error instanceof ErrorHandler) {
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+      }
     }
   };
 }
