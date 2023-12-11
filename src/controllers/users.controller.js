@@ -1,9 +1,5 @@
-import { UsersRepository } from '../repositories/users.repository.js';
-
 export class UsersController {
-  usersRepository = new UsersRepository();
-
-  myInfo = async (req, res, next) => {
+  getMyInfo = async (req, res) => {
     try {
       const me = res.locals.user;
 

@@ -6,6 +6,6 @@ const usersRouter = Router();
 const usersController = new UsersController();
 
 // 내 정보 조회
-usersRouter.get('/me', authMiddleware, usersController.myInfo);
+usersRouter.get('/me', authMiddleware, usersController.getMyInfo);
 
 export default usersRouter;
