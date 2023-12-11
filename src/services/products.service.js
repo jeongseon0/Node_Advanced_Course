@@ -1,12 +1,13 @@
 import { ProductsRepository } from '../repositories/products.repository.js';
+import { ErrorHandler } from '../middlewares/error-handler.middleware.js';
 
 export class ProductsService {
   productsRepository = new ProductsRepository();
 
   createProduct = async (userId, userName, title, content) => {
-    if (!title) return res.status(400).json({ message: '제목을 입력해주세요.' });
+    if (!title) throw new ErrorHandler(400, '제목을 입력해주세요.');
 
-    if (!content) return res.status(400).json({ message: '내용을 입력해주세요.' });
+    if (!content) throw new ErrorHandler(400, '내용을 입력해주세요.');
 
     const createdProduct = await this.productsRepository.createProduct(userId, userName, title, content);
 
@@ -45,7 +46,7 @@ export class ProductsService {
   getProductOne = async (id) => {
     const product = await this.productsRepository.getProductOne(id);
 
-    if (!product) return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
+    if (!product) throw new ErrorHandler(404, '상품 조회에 실패했습니다.');
 
     return {
       id: product.id,
@@ -60,16 +61,16 @@ export class ProductsService {
   };
 
   updateProduct = async (id, title, content, status, userId, userName) => {
-    if (!title && !content && !status) return res.status(400).json({ message: '수정한 정보가 없습니다.' });
+    if (!title && !content && !status) throw new ErrorHandler(404, '수정한 정보가 없습니다.');
 
     if (status !== 'FOR_SALE' || status !== 'SOLD_OUT')
-      return res.status(400).json({ message: '상품의 판매상태가 올바르지 않습니다. (FOR_SALE or SOLD_OUT)' });
+      throw new ErrorHandler(404, '상품의 판매상태가 올바르지 않습니다. (FOR_SALE or SOLD_OUT)');
 
     const updatedProduct = await this.productsRepository.updateProduct(id, title, content, status, userId, userName);
 
-    if (!updatedProduct) return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
+    if (!updatedProduct) throw new ErrorHandler(404, '상품 조회에 실패했습니다.');
 
-    if (updatedProduct.userId !== userId) return res.status(403).json({ message: '작성자만 수정할 수 있습니다.' });
+    if (updatedProduct.userId !== userId) throw new ErrorHandler(404, '작성자만 수정할 수 있습니다.');
 
     return {
       id: updatedProduct.id,
@@ -86,9 +87,9 @@ export class ProductsService {
   deleteProduct = async (id, userId) => {
     const deletedProduct = await this.productsRepository.deleteProduct(id);
 
-    if (!product) return res.status(404).json({ message: '상품 조회에 실패했습니다.' });
+    if (!product) throw new ErrorHandler(404, '상품 조회에 실패했습니다.');
 
-    if (product.userId !== userId) return res.status(403).json({ message: '작성자만 삭제할 수 있습니다.' });
+    if (product.userId !== userId) new ErrorHandler(404, '작성자만 삭제할 수 있습니다.');
 
     return {
       id: deletedProduct.id,
