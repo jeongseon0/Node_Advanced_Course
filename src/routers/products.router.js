@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ProductsController } from '../controllers/products.controller.js';
-import { authMiddleware } from '../middlewares/need-signin.middleware.js';
+import authMiddleware from '../middlewares/need-signin.middleware.js';
 
 const productsRouter = Router();
 const productsController = new ProductsController();

@@ -1,4 +1,4 @@
-import { ProductsRepository } from '../repositories/products.repository';
+import { ProductsRepository } from '../repositories/products.repository.js';
 
 export class ProductsService {
   productsRepository = new ProductsRepository();

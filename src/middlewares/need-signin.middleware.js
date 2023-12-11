@@ -1,6 +1,8 @@
-import { verify } from 'jsonwebtoken';
-import { token_secretKey } from '../config/config.js';
+import pkg from 'jsonwebtoken';
+import security from '../../config/config.js';
 import { prisma } from '../utils/prisma/index.js';
+const { verify } = pkg;
+const token_secretKey = security.token_secretKey;
 const { users } = prisma.user;
 
 export default async (req, res, next) => {

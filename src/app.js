@@ -1,6 +1,6 @@
 import express from 'express';
 import { serverPort } from '../config/config.js';
-import { apiRouter } from './routers/index.router.js';
+import apiRouter from './routers/index.router.js';
 
 const app = express();
 app.use(express.json());

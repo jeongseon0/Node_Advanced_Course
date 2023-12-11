@@ -1,6 +1,6 @@
-import { UsersRepository } from '../repositories/users.repository';
+import { UsersRepository } from '../repositories/users.repository.js';
 
-export class usersController {
+export class UsersController {
   usersRepository = new UsersRepository();
 
   myInfo = async (req, res, next) => {

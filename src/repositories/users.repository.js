@@ -1,6 +1,5 @@
-import { prisma } from '../utils/prisma';
+import { prisma } from '../utils/prisma/index.js';
 
-// [ ]
 export class UsersRepository {
   signup = async (email, name, password) => {
     const signedupUser = await prisma.user.create({ data: { email, name, password } });

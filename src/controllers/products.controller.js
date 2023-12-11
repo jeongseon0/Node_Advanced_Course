@@ -1,4 +1,3 @@
-// CHECKLIST: 에러처리 수정하기 or 미들웨어 생성
 import { ProductsService } from '../services/products.service.js';
 
 export class ProductsController {

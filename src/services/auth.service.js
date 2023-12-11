@@ -1,8 +1,10 @@
 import { UsersRepository } from '../repositories/users.repository.js';
 import { ErrorHandler } from '../middlewares/error-handler.middleware.js';
 import { hashSync, compareSync } from 'bcrypt';
-import { saltORrounds, token_secretKey, token_expiresIn } from './config/config.js';
-import { sign } from 'jsonwebtoken';
+import security from '../../config/config.js';
+import pkg from 'jsonwebtoken';
+const { saltORrounds, token_secretKey, token_expiresIn } = security;
+const { sign } = pkg;
 export class AuthService {
   usersRepository = new UsersRepository();
 
